@@ -1,0 +1,13 @@
+.logo {
+  min-width: 38px;
+  min-height: 38px;
+  display: block;
+  border-style: none;
+  border-radius: 5px;
+  margin-right: 24px;
+  background:
+    var(--color-green, #3DDC84)
+    url('../../images/logo.svg')
+    no-repeat
+    center;
+}
