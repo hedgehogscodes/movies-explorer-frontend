@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import './NotFound.css';
 
 function NotFound() {
