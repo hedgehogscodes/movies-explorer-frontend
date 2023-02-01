@@ -3,7 +3,7 @@
 Данный проект представляет собой фронтэнд часть дипломного проекта.
 
 * Макет проекта можно посмотреть [тут](https://disk.yandex.ru/d/pnDO61zF0_IRjA)
-* [Ссылка на Фронтенд](https://movies.hedgehog.nomoredomains.club)
+* [Ссылка на Фронтенд](http://movies.hedgehog.nomoredomains.club)
 * [Ссылка на API](https://api.movies.hedgehog.nomoredomains.club)
 * Публичный IPv4: 51.250.76.176
 * [Ссылка на пул-реквест](https://github.com/hedgehogscodes/movies-explorer-frontend/pull/2)
