@@ -1,0 +1,7 @@
+import { outsideUrl, checkResponse } from "./utils";
+
+//////////////////Setup Movies ///////////////////////////////////////
+export const getAllMovies = () => 
+  fetch(`${outsideUrl}/beatfilm-movies`)
+    .then(checkResponse);
+/////////////////////////////////////////////////////////////////////

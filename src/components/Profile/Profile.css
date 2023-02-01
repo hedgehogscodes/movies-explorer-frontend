@@ -38,7 +38,11 @@
   width: 100%;
 }
 
-.profile-form__label:last-of-type {
+.form-container {
+  width: 100%;
+}
+
+.form-container:last-of-type {
   margin-bottom: 210px;
   padding: 16px 0 0;
   border-top: 1px solid #424242;
@@ -68,7 +72,7 @@
   background: var(--color-background-d, #303030);
 }
 
-.profile-form__submit {
+.profile-form__btn {
   color: var(--color-default, #fff);
   background-color: transparent;
   font-size: 13px;
@@ -79,9 +83,20 @@
   width: min-content;
 }
 
-.profile-form__submit:hover {
+.profile-form__btn:hover {
   opacity: 0.6;
   cursor: pointer;
+}
+
+.profile-form__btn_disabled{
+  background-color: transparent;
+  font-size: 13px;
+  line-height: 1.23;
+  padding: 0;
+  border: none;
+  transition: opacity 0.2s linear;
+  width: min-content;
+  color: var(--color-background-d, #303030);
 }
 
 .profile__exit {

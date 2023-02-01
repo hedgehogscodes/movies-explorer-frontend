@@ -45,15 +45,39 @@
   color: var(--color-red, #EE3465);
 }
 
+.form__message{
+  margin-top: auto;
+  margin-bottom: 5px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--color-green, #3DDC84);
+  visibility: hidden;
+  opacity: 0;
+  transition: all .2s linear;
+}
+
+.form__message_visible {
+  visibility: visible;
+  opacity: 1;
+  transition: all .2s linear;
+}
+
+.form__message_type_error {
+  color: var(--color-red, #EE3465);
+}
+
 .form__error_visible {
   font-weight: 400;
   font-size: 10px;
   line-height: 12px;
   color: var(--color-red, #EE3465);
+  width: 100%;
+  word-wrap: break-word;
 }
 
 .form__btn {
-  margin-top: auto;
   border: none;
   background: var(--color-blue, #4285F4);
   color: var(--color-default, #fff);
@@ -63,6 +87,18 @@
   font-size: 14px;
   line-height: 17px;
   transition: opacity 0.2s linear;
+}
+
+.form__btn_disabled{
+  border: none;
+  height: 45px;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  transition: opacity 0.2s linear;
+  background-color: var(--color-background-c, #272727);
+  color: var(--color-background-d, #303030);
 }
 
 .form__btn:hover {
