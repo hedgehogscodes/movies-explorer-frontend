@@ -9,6 +9,7 @@ function Form({ children, title, buttonTitle, isValid, onSubmit}) {
 
   useEffect(() => {
     return () => handleResetFormMessage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -16,7 +17,7 @@ function Form({ children, title, buttonTitle, isValid, onSubmit}) {
       <h1 className="form__title">{title}</h1>
       {children}
       <span className={`form__message ${formMessage ? 'form__message_visible form__message_type_error' : ''}`}>{formMessage}</span>
-      <button className={isValid ? 'form__btn' : 'form__btn_disabled'} type="submit" disabled={!isValid}>{isLoading ? 'Подождите...' : buttonTitle}</button>
+      <button className={isValid && !isLoading ? 'form__btn' : 'form__btn_disabled'} type="submit" disabled={!isValid || isLoading}>{isLoading ? 'Подождите...' : buttonTitle}</button>
     </form>
   )
 }

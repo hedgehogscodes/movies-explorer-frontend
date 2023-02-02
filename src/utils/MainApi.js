@@ -1,8 +1,9 @@
-import { baseUrl, outsideUrl, checkResponse } from "./utils";
+import { checkResponse } from "./utils";
+import { BASE_URL, OUTSIDE_URL } from "../config";
 
 //////////////////register & authorize////////////////////////////////
 export const register = (name, email, password) =>
-  fetch(`${baseUrl}/signup`, {
+  fetch(`${BASE_URL}/signup`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -13,7 +14,7 @@ export const register = (name, email, password) =>
 
 
 export const authorize = (email, password) =>
-  fetch(`${baseUrl}/signin`, {
+  fetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -25,7 +26,7 @@ export const authorize = (email, password) =>
 
 //////////////////Setup User Info////////////////////////////////////
 export const getUserInfo = () =>
-  fetch(`${baseUrl}/users/me`, {
+  fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`
@@ -35,7 +36,7 @@ export const getUserInfo = () =>
 
 //////////////////Save User Info////////////////////////////////////
 export const saveUserInfo = (name, email) => 
-  fetch(`${baseUrl}/users/me`, {
+  fetch(`${BASE_URL}/users/me`, {
     method: 'PATCH',
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -51,7 +52,7 @@ export const saveUserInfo = (name, email) =>
 
 //////////////////Save, Delete & Get User Movie/////////////////////
 export const saveMovie = ({ country, director, duration, year, description, image, trailerLink,nameRU, nameEN, id }) =>
-  fetch(`${baseUrl}/movies`, {
+  fetch(`${BASE_URL}/movies`, {
     method: 'POST',
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,18 +64,18 @@ export const saveMovie = ({ country, director, duration, year, description, imag
       duration,
       year: year || 'Данные отсутствуют',
       description: description || 'Данные отсутствуют',
-      image: outsideUrl + image.url,
+      image: OUTSIDE_URL + image.url,
       trailerLink: trailerLink || `http://movies.hedgehog.nomoredomains.club/error404`,
       nameRU: nameRU || 'Данные отсутствуют',
       nameEN: nameEN || 'Данные отсутствуют',
-      thumbnail: outsideUrl + image.formats.thumbnail.url,
+      thumbnail: OUTSIDE_URL + image.formats.thumbnail.url,
       movieId: id,
     }),
   }).then(checkResponse);
 
 
 export const deleteMovie = (movieId) =>
-  fetch(`${baseUrl}/movies/${movieId}`, {
+  fetch(`${BASE_URL}/movies/${movieId}`, {
     method: 'DELETE',
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -84,7 +85,7 @@ export const deleteMovie = (movieId) =>
   
 
 export const getSavedMovies = () => 
-  fetch(`${baseUrl}/movies`, {
+  fetch(`${BASE_URL}/movies`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`

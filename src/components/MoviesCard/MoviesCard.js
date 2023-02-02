@@ -1,9 +1,10 @@
 import { memo } from 'react';
 import './MoviesCard.css';
-import { outsideUrl, convertMovieDuration } from '../../utils/utils';
+import { convertMovieDuration } from '../../utils/utils';
+import { OUTSIDE_URL } from '../../config';
 
 function MoviesCard({ movie, savedMovies, onClick, buttonClassName}) {
-  const imageUrl = movie.image.url ? outsideUrl + movie.image.url : movie.image;
+  const imageUrl = movie.image.url ? OUTSIDE_URL + movie.image.url : movie.image;
   const trailer = movie.trailerLink && movie.trailerLink.includes('http', 0) ? movie.trailerLink : 'http://movies.hedgehog.nomoredomains.club/error404';
   const movieDuration = convertMovieDuration(movie.duration);
   let isSaved = null;

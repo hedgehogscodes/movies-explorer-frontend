@@ -44,7 +44,7 @@ function Profile({ signOut, onSubmit }) {
           <span className={`from__email-error ${emailError ? 'form__error_visible' : '' }`}>{emailError}</span>
         </div>
         <span className={`form__message ${formMessage && formMessage!==successMessage.successMessage ? 'form__message_visible form__message_type_error' : 'form__message_visible'}`}>{formMessage}</span>
-        <button className={`${isValid && (nameValue!==userData.name || emailValue!==userData.email) ? 'profile-form__btn' : 'profile-form__btn_disabled'}`} type="submit" disabled={!isValid}>{isLoading ? 'Подождите...' : 'Редактировать'}</button>
+        <button className={`${isValid && (nameValue!==userData.name || emailValue!==userData.email) && !isLoading ? 'profile-form__btn' : 'profile-form__btn_disabled'}`} type="submit" disabled={!isValid || isLoading || (!(nameValue!==userData.name || emailValue!==userData.email))}>{isLoading ? 'Подождите...' : 'Редактировать'}</button>
       </form>
 
       <button className="profile__exit" onClick={signOut}>Выйти из аккаунта</button>

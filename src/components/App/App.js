@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import Header from '../Header/Header';
 import Popup from '../Popup/Popup';
 import Main from '../Main/Main';
@@ -14,6 +14,7 @@ import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { IsLoadingContext } from '../../contexts/IsLoadingContext';
 import { FormMessageContext } from '../../contexts/FormMessageContext';
+import { StoredDataContext } from '../../contexts/StoredDataContext';
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import * as mainApi from "../../utils/MainApi";
 import * as moviesApi from "../../utils/MoviesApi";
@@ -26,6 +27,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
+  const [storedData, setStoredData] = useState(null);
   //------------------------------------------------------------------------------------------------------------------------------
 
   //--------Состояние мобильной навигации ----------------------------------------------------------------------------------------
@@ -81,9 +83,11 @@ function App() {
       .register(name, email, password)
       .then((data) => {
         setFormMessage(null);
+        setIsLoading(false)
         handleLogin(email, password);
       })
       .catch((err) => {
+        setIsLoading(false)
         if (err === 400) {
           return setFormMessage(errorMessages.validateMessage);
         }
@@ -92,7 +96,6 @@ function App() {
         }
         return setFormMessage(errorMessages.defaultMessage);
       })
-      .finally(() => setIsLoading(false));
   }
 
   function handleLogin(email, password) {
@@ -123,6 +126,7 @@ function App() {
     setSavedMovies([])
     localStorage.removeItem('movies');
     localStorage.removeItem('searchParameter');
+    localStorage.removeItem('checkboxState');
     localStorage.removeItem("token");
     history.push("/");
   }
@@ -135,10 +139,11 @@ function App() {
       .saveUserInfo(name, email)
       .then((res) => {
         setCurrentUser(res);
-        console.log('ok')
         setFormMessage(successMessage.successMessage);
+        setIsLoading(false)
       })
       .catch((err) => {
+        setIsLoading(false)
         if (err === 400) {
           return setFormMessage(errorMessages.validateMessage);
         }
@@ -147,14 +152,14 @@ function App() {
         }
         return setFormMessage(errorMessages.defaultMessage);
       })
-      .finally(() => setIsLoading(false));
   }
   //------------------------------------------------------------------------------------------------------------------------------
 
   //--------Обработчик поиска фильмов по заданному параметру ---------------------------------------------------------------------
-  function handleSearchSubmit(searchParameter) {
+  function handleSearchSubmit(searchParameter, checkboxState) {
     const { storedMovies } = getStoredData();
     localStorage.setItem('searchParameter', searchParameter);
+    localStorage.setItem('checkboxState', JSON.stringify(checkboxState));
 
     if (storedMovies) {
       return setMovies(applyNameFilter(storedMovies, searchParameter));
@@ -165,7 +170,6 @@ function App() {
       .getAllMovies()
       .then((res) => {
         localStorage.setItem('movies', JSON.stringify(res));
-
         setMovies(applyNameFilter(res, searchParameter));
       })
       .catch((err) => console.log(err))
@@ -196,10 +200,10 @@ function App() {
   //------------------------------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
-    const { storedMovies, storedSearch } = getStoredData();
-
+    const { storedMovies, storedSearch, storedCheckboxState } = getStoredData();
     if(storedMovies){
       setMovies(applyNameFilter(storedMovies, storedSearch));
+      setStoredData({ storedMovies, storedSearch, storedCheckboxState });
     }
     uploadData();
   }, [])
@@ -207,70 +211,78 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <IsLoadingContext.Provider value={isLoading}>
-        <FormMessageContext.Provider value={{formMessage, handleResetFormMessage}}>
-          <div className="page">
-            {!isSetuping ? (
-              <Switch>
-                <Route exact path="/">
-                  <Header
-                    onMenuClick={handleNavigationClick}
-                  />
-                  <Main />
-                  <Footer />
-                </Route>
+        <StoredDataContext.Provider value={storedData}>
+          <FormMessageContext.Provider value={{formMessage, handleResetFormMessage}}>
+            <div className="page">
+              {!isSetuping ? (
+                <Switch>
+                  <Route exact path="/">
+                    <Header
+                      onMenuClick={handleNavigationClick}
+                    />
+                    <Main />
+                    <Footer />
+                  </Route>
 
-                <ProtectedRoute exact path="/movies">
-                  <Header
-                    onMenuClick={handleNavigationClick}
-                  />
-                  <Movies 
-                    movies={movies}
-                    savedMovies={savedMovies}
-                    onSubmit={handleSearchSubmit}
-                    onClick={handleMovieButtonClick}
-                  />
-                  <Footer />
-                </ProtectedRoute>
+                  <ProtectedRoute exact path="/movies">
+                    <Header
+                      onMenuClick={handleNavigationClick}
+                    />
+                    <Movies 
+                      movies={movies}
+                      savedMovies={savedMovies}
+                      onSubmit={handleSearchSubmit}
+                      onClick={handleMovieButtonClick}
+                    />
+                    <Footer />
+                  </ProtectedRoute>
 
-                <ProtectedRoute exact path="/saved-movies">
-                  <Header
-                    onMenuClick={handleNavigationClick}
-                  />
-                  <SavedMovies 
-                    savedMovies={savedMovies}
-                    onClick={handleMovieButtonClick}
-                  />
-                  <Footer />
-                </ProtectedRoute>
+                  <ProtectedRoute exact path="/saved-movies">
+                    <Header
+                      onMenuClick={handleNavigationClick}
+                    />
+                    <SavedMovies 
+                      savedMovies={savedMovies}
+                      onClick={handleMovieButtonClick}
+                    />
+                    <Footer />
+                  </ProtectedRoute>
 
-                <ProtectedRoute exact path="/profile">
-                  <Header
-                    onMenuClick={handleNavigationClick}
-                  />
-                  <Profile 
-                    signOut={signOut}
-                    onSubmit={handleUpdateUser}
-                  />
-                </ProtectedRoute>
+                  <ProtectedRoute exact path="/profile">
+                    <Header
+                      onMenuClick={handleNavigationClick}
+                    />
+                    <Profile 
+                      signOut={signOut}
+                      onSubmit={handleUpdateUser}
+                    />
+                  </ProtectedRoute>
 
-                <Route exact path="/signup">
-                  <Register handleRegister={handleRegister}/>
-                </Route>
+                  <Route exact path="/signup">
+                    {!currentUser
+                      ? <Register handleRegister={handleRegister}/>
+                      : <Redirect to="/movies" />
+                    }
+                  </Route>
 
-                <Route exact path="/signin">
-                  <Login handleLogin={handleLogin}/>
-                </Route>
+                  <Route exact path="/signin">
+                    {!currentUser
+                      ? <Login handleLogin={handleLogin}/>
+                      : <Redirect to="/movies" />
+                    }
+                  </Route>
 
-                <Route>
-                  <NotFound />
-                </Route>
-              </Switch> ) :
-              (<Preloader />)
-            }
+                  <Route>
+                    <NotFound />
+                  </Route>
+                </Switch> ) :
+                (<Preloader />)
+              }
 
-            {currentUser && <Popup isOpen={isMobileNavigationOpen} onClose={closeAllPopups} />}
-          </div>
-        </FormMessageContext.Provider>
+              {currentUser && <Popup isOpen={isMobileNavigationOpen} onClose={closeAllPopups} />}
+            </div>
+          </FormMessageContext.Provider>
+        </StoredDataContext.Provider>
       </IsLoadingContext.Provider>
     </CurrentUserContext.Provider>
   );

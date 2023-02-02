@@ -39,7 +39,7 @@ function SavedMovies({ savedMovies, onClick  }) {
 
   return (
     <main className="movies">
-      <SearchForm onSubmit={handleSearch} onCheck={handleFilterCheckbox}/>
+      <SearchForm onSubmit={handleSearch} onCheck={handleFilterCheckbox} isSavedMoviesOpen={true}/>
       {moviesList.length > 0 ? 
         (<MoviesCardList moviesList={moviesList} onClick={onClick} buttonClassName='movies-grid__button_action_delete'/>) :
         (<span className="movies__result-text">{message}</span>)

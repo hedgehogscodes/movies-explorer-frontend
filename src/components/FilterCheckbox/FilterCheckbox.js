@@ -1,11 +1,15 @@
-import { memo } from 'react';
+import { memo, useContext, useState } from 'react';
 import './FilterCheckbox.css';
+import { StoredDataContext } from '../../contexts/StoredDataContext';
 
-function FilterCheckbox({ inputRef, onCheck }) {
+function FilterCheckbox({ inputRef, onCheck, isSavedMoviesOpen }) {
+  const { storedCheckboxState } = useContext(StoredDataContext) || false;
+  const [ isChecked, setIsChecked ] = useState(isSavedMoviesOpen ? false : storedCheckboxState);
 
   const handleChange = () => {
     const isChecked = inputRef.current.hasAttribute('checked');
     isChecked ? inputRef.current.removeAttribute('checked') : inputRef.current.setAttribute('checked', true);
+    setIsChecked(!isChecked);
     onCheck(!isChecked);
   }
 
@@ -17,6 +21,7 @@ function FilterCheckbox({ inputRef, onCheck }) {
           type="checkbox"
           id="filter-checkbox"
           onChange={handleChange}
+          checked={isChecked || false}
           ref={inputRef}
         />
         <span className="filter-checkbox__visible-checkbox" />

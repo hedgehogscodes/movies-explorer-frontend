@@ -1,8 +1,4 @@
-//////////////////URLs for APIs//////////////////////////////////////////
-export const baseUrl = 'https://api.movies.hedgehog.nomoredomains.club';
-export const outsideUrl = 'https://api.nomoreparties.co';
-/////////////////////////////////////////////////////////////////////////
-
+import { SHORT_FILM_DURATION } from "../config";
 //////////////////Converter for API//////////////////////////////////////
 export const checkResponse = (res) =>
   res.ok ? res.json() : Promise.reject(res.status);
@@ -23,10 +19,11 @@ export const errorMessages = {
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////Getting data from local storage//////////////////////
-export const getStoredData = (movies, searchParameter) => {
+export const getStoredData = () => {
   const storedMovies = JSON.parse(localStorage.getItem('movies'));
   const storedSearch = localStorage.getItem('searchParameter') || '';
-  return {storedMovies, storedSearch};
+  const storedCheckboxState = JSON.parse(localStorage.getItem('checkboxState') || false);
+  return {storedMovies, storedSearch, storedCheckboxState};
 }
 ///////////////////////////////////////////////////////////////////////
 
@@ -43,7 +40,7 @@ export const applyNameFilter = (movies, searchParameter) => {
 
 export const applyDurationFilter = (movies) => {
   const selectedMovies = movies.filter((item) => {
-    return item.duration <= 40;
+    return item.duration <= SHORT_FILM_DURATION;
   })
 
   return selectedMovies;

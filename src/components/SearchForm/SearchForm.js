@@ -2,19 +2,17 @@ import { memo, useState, useRef } from 'react';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import "./SearchForm.css";
 
-function SearchForm ({ onSubmit, onCheck }) {
+function SearchForm ({ onSubmit, onCheck, isSavedMoviesOpen }) {
   const [searchParameter, setSearchParameter] = useState('')
   const checkbox = useRef();
 
   const handleChange = (e) => {
     setSearchParameter(e.target.value);
-    
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onSubmit(searchParameter);
+    onSubmit(searchParameter, checkbox.current.hasAttribute('checked'));
   }
 
   return (
@@ -34,7 +32,7 @@ function SearchForm ({ onSubmit, onCheck }) {
           </label>
           <button className="search-form__button" type="submit" title='Найти'></button>
         </div>
-        <FilterCheckbox inputRef={checkbox} onCheck={onCheck}/>
+        <FilterCheckbox inputRef={checkbox} onCheck={onCheck} isSavedMoviesOpen={isSavedMoviesOpen}/>
       </form>
 
     </div>
